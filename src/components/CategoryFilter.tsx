@@ -1,4 +1,4 @@
-import { Category, categories } from "@/data/posts";
+import { Category, categories } from "@/types/post";
 
 interface CategoryFilterProps {
   selected: Category | null;

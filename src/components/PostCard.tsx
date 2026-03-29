@@ -1,9 +1,27 @@
-import { Post, categoryColors } from "@/data/posts";
+import { Post, categoryColors } from "@/types/post";
 
 interface PostCardProps {
   post: Post;
   featured?: boolean;
 }
+
+const getReadTime = (content: string) => {
+  const words = content.trim().split(/\s+/).length;
+  const minutes = Math.max(1, Math.ceil(words / 200));
+  return `${minutes} min`;
+};
+
+const formatDate = (createdAt: string) => {
+  try {
+    return new Date(createdAt).toLocaleDateString(undefined, {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+  } catch {
+    return "";
+  }
+};
 
 const PostCard = ({ post, featured = false }: PostCardProps) => {
   return (
@@ -18,9 +36,7 @@ const PostCard = ({ post, featured = false }: PostCardProps) => {
         >
           {post.category}
         </span>
-        <span className="text-xs text-muted-foreground font-body">
-          {post.readTime}
-        </span>
+        <span className="text-xs text-muted-foreground font-body">{getReadTime(post.content)}</span>
       </div>
       <h3
         className={`font-heading font-semibold text-foreground group-hover:text-primary transition-colors mb-3 ${
@@ -29,11 +45,9 @@ const PostCard = ({ post, featured = false }: PostCardProps) => {
       >
         {post.title}
       </h3>
-      <p className="font-body text-muted-foreground leading-relaxed text-sm">
-        {post.teaser}
-      </p>
+      <p className="font-body text-muted-foreground leading-relaxed text-sm">{post.excerpt}</p>
       <div className="mt-4 flex items-center justify-between">
-        <span className="text-xs text-muted-foreground font-body">{post.date}</span>
+        <span className="text-xs text-muted-foreground font-body">{formatDate(post.createdAt)}</span>
         <span className="text-sm font-body font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity">
           Read →
         </span>

@@ -1,9 +1,21 @@
-import { posts } from "@/data/posts";
+import { useQuery } from "@tanstack/react-query";
+import { Post } from "@/types/post";
 import PostCard from "./PostCard";
 import { Link } from "react-router-dom";
 
+const fetchFeatured = async () => {
+  const res = await fetch("/api/posts");
+  if (!res.ok) throw new Error("Failed to load featured post");
+  return (await res.json()) as Post[];
+};
+
 const Hero = () => {
-  const featured = posts[0];
+  const { data: posts } = useQuery({
+    queryKey: ["heroPosts"],
+    queryFn: fetchFeatured,
+    staleTime: 1000 * 60,
+  });
+  const featured = posts?.[0];
 
   return (
     <section className="pt-32 pb-16 px-6">
@@ -29,9 +41,13 @@ const Hero = () => {
           <p className="text-xs uppercase tracking-widest text-muted-foreground mb-4 font-body font-medium">
             Featured
           </p>
-          <Link to={`/post/${featured.slug}`} className="block max-w-2xl mx-auto">
-            <PostCard post={featured} featured />
-          </Link>
+          {featured ? (
+            <Link to={`/post/${featured.slug}`} className="block max-w-2xl mx-auto">
+              <PostCard post={featured} featured />
+            </Link>
+          ) : (
+            <div className="glass-card rounded-xl p-8 text-center text-muted-foreground">No featured post available.</div>
+          )}
         </div>
       </div>
     </section>
