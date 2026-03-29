@@ -1,4 +1,4 @@
-import prisma from "../_lib/prisma";
+import prisma from "../_lib/prisma.js";
 
 const categories = ["Light", "Heat", "Motion", "Sound", "Forces", "Electricity"];
 
